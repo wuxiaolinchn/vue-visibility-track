@@ -76,12 +76,12 @@ function reset() {
 }
 
 export default {
-    bind: function (el, binding) {
+    bind(el, binding) {
         getBinding(el).binding = binding;
         observer.observe(el);
     },
 
-    update: function (el, binding) {
+    update(el, binding) {
         getBinding(el).binding = binding;
     },
 
