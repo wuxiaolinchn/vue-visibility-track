@@ -7,8 +7,4 @@ VueVisibleTrack.install = function(Vue, options) {
     Vue.directive('visible-track', VueVisibleTrack);
 };
 
-if (typeof window !== 'undefined' && window.Vue) {
-    window.VueVisibleTrack = VueVisibleTrack;
-}
-
 export default VueVisibleTrack;

@@ -57,13 +57,13 @@ function handleIntersection(entries) {
 }
 
 function handleIntersecting(entry) {
-    let binding = getBinding(entry.target).binding.binding;
+    let binding = getBinding(entry.target).binding;
     let each = !!binding["modifiers"]["each"];
     let module = binding["arg"] || "";
-    if (sentModules.includes(module) && !each) {
+    if (sentModules.indexOf(module) > -1 && !each) {
         return;
     }
-    !sentModules.includes(module) && sentModules.push(module);
+    sentModules.indexOf(module) === -1 && sentModules.push(module);
     typeof defaults["callback"] === "function" && defaults["callback"](binding["value"]);
 }
 
