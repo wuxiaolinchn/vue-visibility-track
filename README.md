@@ -1,6 +1,8 @@
 # vue-visible-track
 
 [![Vue 2.x](https://img.shields.io/badge/Vue-2.x-brightgreen.svg)](https://vuejs.org/v2/guide/)
+[![npm](https://img.shields.io/npm/v/vue-visible-track.svg)](https://www.npmjs.com/package/vue-visible-track)
+[![npm-downloads](https://img.shields.io/npm/dm/vue-visible-track.svg)](https://www.npmjs.com/package/vue-visible-track)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://github.com/wuxiaolinchn/vue-visible-track/blob/master/LICENSE)
 
 A Vue.js directive helps track visible elements.
