@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/wuxiaolinchn/vue-visible-track/issues"
   },
-  "homepage": "https://github.com/wuxiaolinchn/vue-visible-track#readme"
+  "homepage": "https://github.com/wuxiaolinchn/vue-visible-track#readme",
+  "dependencies": {
+    "intersection-observer": "^0.7.0"
+  }
 }
