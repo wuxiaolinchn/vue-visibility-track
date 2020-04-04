@@ -1,8 +1,35 @@
+/**
+ * vue-visible-track v0.0.1
+ * Copyright (c) 2020 wuxiaolinchn@outlook.com All Rights Reserved.
+ * Licensed under the MIT License. See LICENSE in the project root for license information.
+ */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global = global || self, global.VueVisibleTrack = factory());
 }(this, (function () { 'use strict';
+
+  function _classCallCheck(instance, Constructor) {
+    if (!(instance instanceof Constructor)) {
+      throw new TypeError("Cannot call a class as a function");
+    }
+  }
+
+  function _defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  function _createClass(Constructor, protoProps, staticProps) {
+    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) _defineProperties(Constructor, staticProps);
+    return Constructor;
+  }
 
   function _extends() {
     _extends = Object.assign || function (target) {
@@ -749,49 +776,7 @@
 
   }());
 
-  var observer = new IntersectionObserver(handleIntersection);
-  var bindings = [];
-  var sentModules = [];
-  var defaults = {
-    callback: function callback() {//
-    }
-  };
-
-  function deleteBinding(el) {
-    for (var i = 0; i < bindings.length; ++i) {
-      if (bindings[i].el === el) {
-        bindings.splice(i, 1);
-        return true;
-      }
-    }
-
-    return false;
-  }
-
-  function findBinding(el) {
-    for (var i = 0; i < bindings.length; ++i) {
-      if (bindings[i].el === el) {
-        return bindings[i];
-      }
-    }
-  }
-
-  function getBinding(el) {
-    var binding = findBinding(el);
-
-    if (binding) {
-      return binding;
-    }
-
-    binding = {
-      el: el,
-      binding: {}
-    };
-    bindings.push(binding);
-    return binding;
-  }
-
-  function handleIntersection(entries) {
+  var observer = new IntersectionObserver(function (entries) {
     if (!entries || !entries.length) {
       return;
     }
@@ -799,49 +784,88 @@
     for (var i = 0; i < entries.length; i++) {
       var entry = entries[i];
 
-      if (!entry.isIntersecting) {
-        continue;
+      if (entry.isIntersecting) {
+        var track = entry.target._vue_visible_track;
+        track && track.handleIntersecting();
       }
-
-      handleIntersecting(entry);
     }
-  }
+  });
 
-  function handleIntersecting(entry) {
-    var binding = getBinding(entry.target).binding;
-    var each = !!binding["modifiers"]["each"];
-    var module = binding["arg"] || "";
+  var Track = /*#__PURE__*/function () {
+    function Track(el, binding) {
+      _classCallCheck(this, Track);
 
-    if (sentModules.indexOf(module) > -1 && !each) {
-      return;
+      this.el = el;
+      this.binding = binding;
+      this.observe();
     }
 
-    sentModules.indexOf(module) === -1 && sentModules.push(module);
-    typeof defaults["callback"] === "function" && defaults["callback"](binding["value"]);
-  }
+    _createClass(Track, [{
+      key: "setBinding",
+      value: function setBinding(binding) {
+        this.binding = binding;
+      }
+    }, {
+      key: "observe",
+      value: function observe() {
+        observer.observe(this.el);
+      }
+    }, {
+      key: "unobserve",
+      value: function unobserve() {
+        observer.unobserve(this.el);
+      }
+    }, {
+      key: "handleIntersecting",
+      value: function handleIntersecting() {
+        this.doDefaultCallback();
+        this.doBindingCallback();
+      }
+    }, {
+      key: "doDefaultCallback",
+      value: function doDefaultCallback() {
+        if (typeof defaults["callback"] === "function") {
+          defaults["callback"](this.binding["value"]);
+        }
+      }
+    }, {
+      key: "doBindingCallback",
+      value: function doBindingCallback() {
+        var value = this.binding["value"];
 
-  function setDefaults(options) {
-    defaults = _extends({}, defaults, options);
-  }
+        if (!value || !value["callback"] || typeof value["callback"] !== "function") {
+          return;
+        }
 
-  function reset() {
-    sentModules.length = 0;
-  }
+        value["callback"](value);
+      }
+    }]);
 
+    return Track;
+  }();
+
+  var defaults = {};
   var VueVisibleTrack = {
     bind: function bind(el, binding) {
-      getBinding(el).binding = binding;
-      observer.observe(el);
+      el._vue_visible_track = new Track(el, binding);
     },
     update: function update(el, binding) {
-      getBinding(el).binding = binding;
+      if (el._vue_visible_track) {
+        el._vue_visible_track.setBinding(binding);
+      } else {
+        this.bind(el, binding);
+      }
     },
     unbind: function unbind(el) {
-      deleteBinding(el);
-      observer.unobserve(el);
+      if (el._vue_visible_track) {
+        el._vue_visible_track.unobserve();
+
+        delete el._vue_visible_track;
+      }
     },
-    setDefaults: setDefaults,
-    reset: reset
+    setDefaults: function setDefaults(options) {
+      defaults = _extends({}, defaults, options);
+    }
   };
 
   VueVisibleTrack.install = function (Vue, options) {
