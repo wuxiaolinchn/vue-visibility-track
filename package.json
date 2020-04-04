@@ -1,0 +1,25 @@
+{
+  "name": "vue-visible-track",
+  "version": "0.0.1",
+  "description": "A Vue.js directive helps track visible element.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wuxiaolinchn/vue-visible-track.git"
+  },
+  "keywords": [
+    "Vue",
+    "Vue.js",
+    "directive",
+    "track"
+  ],
+  "author": "wuxiaolinchn@outlook.com",
+  "license": "MIT License",
+  "bugs": {
+    "url": "https://github.com/wuxiaolinchn/vue-visible-track/issues"
+  },
+  "homepage": "https://github.com/wuxiaolinchn/vue-visible-track#readme"
+}
