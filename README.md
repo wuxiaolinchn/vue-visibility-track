@@ -31,7 +31,7 @@ Use `v-visible-track` on an element:
 ```
 
 ```js
-import Vue from 'vue';
+import Vue from "vue";
 import VueVisibleTrack from "vue-visible-track";
 
 Vue.use(VueVisibleTrack, {
