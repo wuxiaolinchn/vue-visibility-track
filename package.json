@@ -2,7 +2,7 @@
     "name": "vue-visible-track",
     "version": "0.0.1",
     "description": "A Vue.js directive helps track visible elements.",
-    "main": "index.js",
+    "main": "dist/vue-visible-track.js",
     "scripts": {
         "build": "rollup -c",
         "prepublishOnly": "npm run build"
