@@ -71,7 +71,7 @@ function setDefaults(options) {
     defaults = Object.assign({}, defaults, options);
 }
 
-function clearSentModules() {
+function reset() {
     sentModules.length = 0;
 }
 
@@ -91,5 +91,5 @@ export default {
     },
 
     setDefaults,
-    clearSentModules
+    reset
 };

@@ -1,6 +1,6 @@
-import VueVisibleTrack from './directive'
+import VueVisibleTrack from './directive';
 
-const install = function(Vue, options) {
+VueVisibleTrack.install = function(Vue, options) {
     if (options) {
         VueVisibleTrack.setDefaults(options);
     }
@@ -9,8 +9,6 @@ const install = function(Vue, options) {
 
 if (typeof window !== 'undefined' && window.Vue) {
     window.VueVisibleTrack = VueVisibleTrack;
-    window.Vue.use(install);
 }
 
-VueVisibleTrack.install = install;
 export default VueVisibleTrack;
