@@ -21,7 +21,7 @@ class Track {
     constructor(el, binding) {
         this.el = el;
         this.binding = binding;
-        this.isIntersecting = false;
+        this.isIntersecting = undefined;
         this.timeoutId = 0;
         this.trackId = "";
         this.observe();
@@ -44,10 +44,13 @@ class Track {
         this.timeoutId = setTimeout(() => {
             if (this.trackId !== trackId
                 || !this.binding["modifiers"]["once"]) {
+                if (this.isIntersecting !== undefined
+                    && this.isIntersecting !== isIntersecting) {
+                    this.trackId = trackId;
+                }
                 this.isIntersecting = isIntersecting;
                 this.doDefaultCallback();
                 this.doBindingCallback();
-                this.trackId = trackId;
             }
         }, 200);
     }

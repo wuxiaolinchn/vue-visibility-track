@@ -801,7 +801,7 @@
 
       this.el = el;
       this.binding = binding;
-      this.isIntersecting = false;
+      this.isIntersecting = undefined;
       this.timeoutId = 0;
       this.trackId = "";
       this.observe();
@@ -830,13 +830,15 @@
         clearTimeout(this.timeoutId);
         this.timeoutId = setTimeout(function () {
           if (_this.trackId !== trackId || !_this.binding["modifiers"]["once"]) {
+            if (_this.isIntersecting !== undefined && _this.isIntersecting !== isIntersecting) {
+              _this.trackId = trackId;
+            }
+
             _this.isIntersecting = isIntersecting;
 
             _this.doDefaultCallback();
 
             _this.doBindingCallback();
-
-            _this.trackId = trackId;
           }
         }, 200);
       }

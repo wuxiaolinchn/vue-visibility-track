@@ -27,11 +27,7 @@ Using CDN:
 
 ## Usage
 
-Use `v-visibility-track` on an element:
-```html
-<div v-visibility-track:modulename.each="{'key1':'value1','key2':'value2'}"></div>
-```
-
+Install the directive by `Vue.use()`, here you can define the global callback function:
 ```js
 import Vue from "vue";
 import VueVisibilityTrack from "vue-visibility-track";
@@ -55,6 +51,31 @@ window.Vue.use(window.VueVisibilityTrack, {
         console.log(isVisible);
         console.log(args.key1);
         console.log(args.key2);
+    }
+});
+```
+
+Use `v-visibility-track` on an element:
+```html
+<div v-visibility-track="{'key1':'value1','key2':'value2', callback: yourCallbackMethodName}"></div>
+```
+
+If you want track only once visibility change, add the `once` modifier:
+
+```html
+<div v-visibility-track.once="{'key1':'value1','key2':'value2', callback: yourCallbackMethodName}"></div>
+```
+
+Handle visibility change event:
+```js
+new Vue({
+    methods: {
+        yourCallbackMethodName(isVisible, args){
+            // Do something when the element's visibility is changed
+            console.log(isVisible);
+            console.log(args.key1);
+            console.log(args.key2);
+        }
     }
 });
 ```
