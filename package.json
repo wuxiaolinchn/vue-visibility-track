@@ -1,15 +1,15 @@
 {
-    "name": "vue-visible-track",
+    "name": "vue-visibility-track",
     "version": "0.0.1",
-    "description": "A Vue.js directive helps track visible elements.",
-    "main": "dist/vue-visible-track.js",
+    "description": "A Vue.js directive helps track elements's visibility.",
+    "main": "dist/vue-visibility-track.js",
     "scripts": {
         "build": "rollup -c",
         "prepublishOnly": "npm run build"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/wuxiaolinchn/vue-visible-track.git"
+        "url": "git+https://github.com/wuxiaolinchn/vue-visibility-track.git"
     },
     "keywords": [
         "Vue",
@@ -20,9 +20,9 @@
     "author": "wuxiaolinchn@outlook.com",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/wuxiaolinchn/vue-visible-track/issues"
+        "url": "https://github.com/wuxiaolinchn/vue-visibility-track/issues"
     },
-    "homepage": "https://github.com/wuxiaolinchn/vue-visible-track#readme",
+    "homepage": "https://github.com/wuxiaolinchn/vue-visibility-track#readme",
     "dependencies": {
         "intersection-observer": "^0.7.0"
     },

@@ -5,11 +5,11 @@ import {version} from "./package.json";
 export default {
     input: './src/index.js',
     output: {
-        file: `dist/vue-visible-track.js`,
-        name: 'VueVisibleTrack',
+        file: `dist/vue-visibility-track.js`,
+        name: 'VueVisibilityTrack',
         format: 'umd',
         banner: `/**
- * vue-visible-track v${version}
+ * vue-visibility-track v${version}
  * Copyright (c) 2020 wuxiaolinchn@outlook.com All Rights Reserved.
  * Licensed under the MIT License. See LICENSE in the project root for license information.
  */`,

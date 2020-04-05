@@ -1,12 +1,12 @@
 /**
- * vue-visible-track v0.0.1
+ * vue-visibility-track v0.0.1
  * Copyright (c) 2020 wuxiaolinchn@outlook.com All Rights Reserved.
  * Licensed under the MIT License. See LICENSE in the project root for license information.
  */
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
-  (global = global || self, global.VueVisibleTrack = factory());
+  (global = global || self, global.VueVisibilityTrack = factory());
 }(this, (function () { 'use strict';
 
   function _classCallCheck(instance, Constructor) {
@@ -782,14 +782,18 @@
     }
 
     for (var i = 0; i < entries.length; i++) {
-      var entry = entries[i];
-
-      if (entry.isIntersecting) {
-        var track = entry.target._vue_visible_track;
-        track && track.handleIntersecting();
-      }
+      var track = entries[i].target._vue_visibility_track;
+      track && track.handleIntersection(entries[i].isIntersecting);
     }
   });
+
+  var genTrackId = function genTrackId() {
+    var rnd = Math.floor(Math.random() * 10000);
+    var time = new Date().getTime();
+    return "".concat(time, "_").concat(rnd);
+  };
+
+  var trackId = genTrackId();
 
   var Track = /*#__PURE__*/function () {
     function Track(el, binding) {
@@ -797,6 +801,9 @@
 
       this.el = el;
       this.binding = binding;
+      this.isIntersecting = false;
+      this.timeoutId = 0;
+      this.trackId = "";
       this.observe();
     }
 
@@ -816,28 +823,36 @@
         observer.unobserve(this.el);
       }
     }, {
-      key: "handleIntersecting",
-      value: function handleIntersecting() {
-        this.doDefaultCallback();
-        this.doBindingCallback();
+      key: "handleIntersection",
+      value: function handleIntersection(isIntersecting) {
+        var _this = this;
+
+        clearTimeout(this.timeoutId);
+        this.timeoutId = setTimeout(function () {
+          if (_this.trackId !== trackId || !_this.binding["modifiers"]["once"]) {
+            _this.isIntersecting = isIntersecting;
+
+            _this.doDefaultCallback();
+
+            _this.doBindingCallback();
+
+            _this.trackId = trackId;
+          }
+        }, 200);
       }
     }, {
       key: "doDefaultCallback",
       value: function doDefaultCallback() {
         if (typeof defaults["callback"] === "function") {
-          defaults["callback"](this.binding["value"]);
+          defaults["callback"](this.isIntersecting, this.binding["value"]);
         }
       }
     }, {
       key: "doBindingCallback",
       value: function doBindingCallback() {
-        var value = this.binding["value"];
-
-        if (!value || !value["callback"] || typeof value["callback"] !== "function") {
-          return;
+        if (this.binding["value"] && typeof this.binding["value"]["callback"] === "function") {
+          this.binding["value"]["callback"](this.isIntersecting, this.binding["value"]);
         }
-
-        value["callback"](value);
       }
     }]);
 
@@ -845,37 +860,40 @@
   }();
 
   var defaults = {};
-  var VueVisibleTrack = {
+  var VueVisibilityTrack = {
     bind: function bind(el, binding) {
-      el._vue_visible_track = new Track(el, binding);
+      el._vue_visibility_track = new Track(el, binding);
     },
     update: function update(el, binding) {
-      if (el._vue_visible_track) {
-        el._vue_visible_track.setBinding(binding);
+      if (el._vue_visibility_track) {
+        el._vue_visibility_track.setBinding(binding);
       } else {
         this.bind(el, binding);
       }
     },
     unbind: function unbind(el) {
-      if (el._vue_visible_track) {
-        el._vue_visible_track.unobserve();
+      if (el._vue_visibility_track) {
+        el._vue_visibility_track.unobserve();
 
-        delete el._vue_visible_track;
+        delete el._vue_visibility_track;
       }
     },
     setDefaults: function setDefaults(options) {
       defaults = _extends({}, defaults, options);
+    },
+    reset: function reset() {
+      trackId = genTrackId();
     }
   };
 
-  VueVisibleTrack.install = function (Vue, options) {
+  VueVisibilityTrack.install = function (Vue, options) {
     if (options) {
-      VueVisibleTrack.setDefaults(options);
+      VueVisibilityTrack.setDefaults(options);
     }
 
-    Vue.directive('visible-track', VueVisibleTrack);
+    Vue.directive('visibility-track', VueVisibilityTrack);
   };
 
-  return VueVisibleTrack;
+  return VueVisibilityTrack;
 
 })));

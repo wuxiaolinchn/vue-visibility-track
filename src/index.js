@@ -1,10 +1,10 @@
-import VueVisibleTrack from './directive';
+import VueVisibilityTrack from './directive';
 
-VueVisibleTrack.install = function(Vue, options) {
+VueVisibilityTrack.install = function(Vue, options) {
     if (options) {
-        VueVisibleTrack.setDefaults(options);
+        VueVisibilityTrack.setDefaults(options);
     }
-    Vue.directive('visible-track', VueVisibleTrack);
+    Vue.directive('visibility-track', VueVisibilityTrack);
 };
 
-export default VueVisibleTrack;
+export default VueVisibilityTrack;
