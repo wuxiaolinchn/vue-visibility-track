@@ -60,7 +60,7 @@ Use `v-visibility-track` on an element:
 <div v-visibility-track="{'key1':'value1','key2':'value2', callback: yourCallbackMethodName}"></div>
 ```
 
-If you want track only once visibility change, add the `once` modifier:
+If you want track visibility change event only ONE time, add the `once` modifier:
 
 ```html
 <div v-visibility-track.once="{'key1':'value1','key2':'value2', callback: yourCallbackMethodName}"></div>
