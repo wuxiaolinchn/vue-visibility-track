@@ -57,15 +57,23 @@ class Track {
 
     doDefaultCallback() {
         if (typeof defaults["callback"] === "function") {
-            defaults["callback"](this.isIntersecting, this.binding["value"]);
+            defaults["callback"](this.isIntersecting, this.getCallbackValue());
         }
     }
 
     doBindingCallback() {
-        if (this.binding["value"]
-            && typeof this.binding["value"]["callback"] === "function") {
-            this.binding["value"]["callback"](this.isIntersecting, this.binding["value"]);
+        let callback = this.getCallback();
+        if (typeof callback === "function") {
+            callback(this.isIntersecting, this.getCallbackValue());
         }
+    }
+
+    getCallback() {
+        return this.binding["value"] && this.binding["value"]["callback"] || null;
+    }
+
+    getCallbackValue() {
+        return this.binding["value"] && this.binding["value"]["callbackValue"] || null;
     }
 }
 

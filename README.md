@@ -33,11 +33,10 @@ import Vue from "vue";
 import VueVisibilityTrack from "vue-visibility-track";
 
 Vue.use(VueVisibilityTrack, {
-    callback(isVisible, args) {
+    callback(isVisible, value) {
         // Do something when the element's visibility is changed
         console.log(isVisible);
-        console.log(args.key1);
-        console.log(args.key2);
+        console.log(value); // -> "Hello, world!"
     }
 });
 ```
@@ -46,35 +45,33 @@ If you are using the CDN version:
 
 ```js
 window.Vue.use(window.VueVisibilityTrack, {
-    callback(isVisible, args) {
+    callback(isVisible, value) {
         // Do something when the element's visibility is changed
         console.log(isVisible);
-        console.log(args.key1);
-        console.log(args.key2);
+        console.log(value); // -> "Hello, world!"
     }
 });
 ```
 
 Use `v-visibility-track` on an element:
 ```html
-<div v-visibility-track="{'key1':'value1','key2':'value2', callback: yourCallbackMethodName}"></div>
+<div v-visibility-track="{callbackValue: 'Hello, world!', callback: yourCallbackMethodName}"></div>
 ```
 
 If you want track visibility change event only ONE time, add the `once` modifier:
 
 ```html
-<div v-visibility-track.once="{'key1':'value1','key2':'value2', callback: yourCallbackMethodName}"></div>
+<div v-visibility-track.once="{callbackValue: 'Hello, world!', callback: yourCallbackMethodName}"></div>
 ```
 
 Handle visibility change event:
 ```js
 new Vue({
     methods: {
-        yourCallbackMethodName(isVisible, args){
+        yourCallbackMethodName(isVisible, value){
             // Do something when the element's visibility is changed
             console.log(isVisible);
-            console.log(args.key1);
-            console.log(args.key2);
+            console.log(value); // -> "Hello, world!"
         }
     }
 });
