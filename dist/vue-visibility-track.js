@@ -783,7 +783,7 @@
 
     for (var i = 0; i < entries.length; i++) {
       var track = entries[i].target._vue_visibility_track;
-      track && track.handleIntersection(entries[i].isIntersecting);
+      track && track.handleIntersection(entries[i]);
     }
   });
 
@@ -801,7 +801,8 @@
 
       this.el = el;
       this.binding = binding;
-      this.isIntersecting = undefined;
+      this.intersectionObserverEntry = null;
+      this.lastIntersectionObserverEntry = null;
       this.timeoutId = 0;
       this.trackId = "";
       this.observe();
@@ -824,37 +825,68 @@
       }
     }, {
       key: "handleIntersection",
-      value: function handleIntersection(isIntersecting) {
+      value: function handleIntersection(entry) {
         var _this = this;
 
         clearTimeout(this.timeoutId);
         this.timeoutId = setTimeout(function () {
-          if (_this.trackId !== trackId || !_this.binding["modifiers"]["once"]) {
-            if (_this.isIntersecting !== undefined && _this.isIntersecting !== isIntersecting) {
-              _this.trackId = trackId;
-            }
+          _this.setIntersectionObserverEntry(entry);
 
-            _this.isIntersecting = isIntersecting;
-
-            _this.doDefaultCallback();
-
-            _this.doBindingCallback();
+          if (!_this.isChanged()) {
+            return;
           }
+
+          if (_this.trackId === trackId && _this.binding["modifiers"]["once"]) {
+            return;
+          }
+
+          _this.trackId = trackId;
+
+          _this.doDefaultCallback();
+
+          _this.doBindingCallback();
         }, 200);
+      }
+    }, {
+      key: "setIntersectionObserverEntry",
+      value: function setIntersectionObserverEntry(entry) {
+        this.lastIntersectionObserverEntry = this.intersectionObserverEntry;
+        this.intersectionObserverEntry = entry;
+      }
+    }, {
+      key: "isChanged",
+      value: function isChanged() {
+        if (this.trackId !== trackId && this.intersectionObserverEntry && this.intersectionObserverEntry.isIntersecting) {
+          return true;
+        }
+
+        return this.lastIntersectionObserverEntry && this.intersectionObserverEntry && this.lastIntersectionObserverEntry.isIntersecting !== this.intersectionObserverEntry.isIntersecting;
       }
     }, {
       key: "doDefaultCallback",
       value: function doDefaultCallback() {
         if (typeof defaults["callback"] === "function") {
-          defaults["callback"](this.isIntersecting, this.binding["value"]);
+          defaults["callback"](this.intersectionObserverEntry.isIntersecting, this.getCallbackValue());
         }
       }
     }, {
       key: "doBindingCallback",
       value: function doBindingCallback() {
-        if (this.binding["value"] && typeof this.binding["value"]["callback"] === "function") {
-          this.binding["value"]["callback"](this.isIntersecting, this.binding["value"]);
+        var callback = this.getCallback();
+
+        if (typeof callback === "function") {
+          callback(this.intersectionObserverEntry.isIntersecting, this.getCallbackValue());
         }
+      }
+    }, {
+      key: "getCallback",
+      value: function getCallback() {
+        return this.binding["value"] && this.binding["value"]["callback"] || null;
+      }
+    }, {
+      key: "getCallbackValue",
+      value: function getCallbackValue() {
+        return this.binding["value"] && this.binding["value"]["callbackValue"] || null;
       }
     }]);
 
@@ -885,6 +917,18 @@
     },
     reset: function reset() {
       trackId = genTrackId();
+      var entries = observer.takeRecords();
+
+      if (entries && entries.length) {
+        for (var i = 0; i < entries.length; i++) {
+          var entry = entries[i];
+
+          if (entry && entry.target) {
+            observer.unobserve(entry.target);
+            observer.observe(entry.target);
+          }
+        }
+      }
     }
   };
 
