@@ -42,7 +42,6 @@ Vue.use(VueVisibilityTrack, {
 ```
 
 If you are using the CDN version:
-
 ```js
 window.Vue.use(window.VueVisibilityTrack, {
     callback(isVisible, value) {
@@ -58,12 +57,6 @@ Use `v-visibility-track` on an element:
 <div v-visibility-track="{callbackValue: 'Hello, world!', callback: yourCallbackMethodName}"></div>
 ```
 
-If you want track visibility change event only ONE time, add the `once` modifier:
-
-```html
-<div v-visibility-track.once="{callbackValue: 'Hello, world!', callback: yourCallbackMethodName}"></div>
-```
-
 Handle visibility change event:
 ```js
 new Vue({
@@ -75,6 +68,11 @@ new Vue({
         }
     }
 });
+```
+
+If you want track the visibility change event only ONE time, add the `once` modifier. And use `VueVisibilityTrack.reset()` method to reset:
+```html
+<div v-visibility-track.once="{callbackValue: 'Hello, world!', callback: yourCallbackMethodName}"></div>
 ```
 
 ## License

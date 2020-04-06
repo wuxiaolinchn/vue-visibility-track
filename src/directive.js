@@ -6,7 +6,7 @@ let observer = new IntersectionObserver((entries) => {
     }
     for (let i = 0; i < entries.length; i++) {
         let track = entries[i].target._vue_visibility_track;
-        track && track.handleIntersection(entries[i].isIntersecting);
+        track && track.handleIntersection(entries[i]);
     }
 });
 
@@ -21,7 +21,8 @@ class Track {
     constructor(el, binding) {
         this.el = el;
         this.binding = binding;
-        this.isIntersecting = undefined;
+        this.intersectionObserverEntry = null;
+        this.lastIntersectionObserverEntry = null;
         this.timeoutId = 0;
         this.trackId = "";
         this.observe();
@@ -39,32 +40,50 @@ class Track {
         observer.unobserve(this.el);
     }
 
-    handleIntersection(isIntersecting) {
+    handleIntersection(entry) {
         clearTimeout(this.timeoutId);
         this.timeoutId = setTimeout(() => {
-            if (this.trackId !== trackId
-                || !this.binding["modifiers"]["once"]) {
-                if (this.isIntersecting !== undefined
-                    && this.isIntersecting !== isIntersecting) {
-                    this.trackId = trackId;
-                }
-                this.isIntersecting = isIntersecting;
-                this.doDefaultCallback();
-                this.doBindingCallback();
+            this.setIntersectionObserverEntry(entry);
+            if (!this.isChanged()) {
+                return;
             }
+            if (this.trackId === trackId
+                && this.binding["modifiers"]["once"]) {
+                return;
+            }
+            this.trackId = trackId;
+            this.doDefaultCallback();
+            this.doBindingCallback();
         }, 200);
+    }
+
+    setIntersectionObserverEntry(entry) {
+        this.lastIntersectionObserverEntry = this.intersectionObserverEntry;
+        this.intersectionObserverEntry = entry;
+    }
+
+    isChanged() {
+        if (this.trackId !== trackId
+            && this.intersectionObserverEntry
+            && this.intersectionObserverEntry.isIntersecting) {
+            return true;
+        }
+
+        return this.lastIntersectionObserverEntry
+            && this.intersectionObserverEntry
+            && this.lastIntersectionObserverEntry.isIntersecting !== this.intersectionObserverEntry.isIntersecting;
     }
 
     doDefaultCallback() {
         if (typeof defaults["callback"] === "function") {
-            defaults["callback"](this.isIntersecting, this.getCallbackValue());
+            defaults["callback"](this.intersectionObserverEntry.isIntersecting, this.getCallbackValue());
         }
     }
 
     doBindingCallback() {
         let callback = this.getCallback();
         if (typeof callback === "function") {
-            callback(this.isIntersecting, this.getCallbackValue());
+            callback(this.intersectionObserverEntry.isIntersecting, this.getCallbackValue());
         }
     }
 
@@ -104,5 +123,15 @@ export default {
 
     reset() {
         trackId = genTrackId();
+        let entries = observer.takeRecords();
+        if (entries && entries.length) {
+            for (let i = 0; i < entries.length; i++) {
+                let entry = entries[i];
+                if (entry && entry.target) {
+                    observer.unobserve(entry.target);
+                    observer.observe(entry.target);
+                }
+            }
+        }
     }
 };
