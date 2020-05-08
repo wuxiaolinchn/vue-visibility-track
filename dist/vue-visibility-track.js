@@ -1,5 +1,5 @@
 /**
- * vue-visibility-track v0.0.1
+ * vue-visibility-track v0.0.2
  * Copyright (c) 2020 wuxiaolinchn@outlook.com All Rights Reserved.
  * Licensed under the MIT License. See LICENSE in the project root for license information.
  */

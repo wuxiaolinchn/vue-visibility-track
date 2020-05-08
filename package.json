@@ -1,6 +1,6 @@
 {
     "name": "vue-visibility-track",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "A Vue.js directive helps track elements's visibility.",
     "main": "dist/vue-visibility-track.js",
     "scripts": {
