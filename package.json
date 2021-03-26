@@ -1,6 +1,6 @@
 {
     "name": "vue-visibility-track",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "A Vue.js directive helps track elements's visibility.",
     "main": "dist/vue-visibility-track.js",
     "scripts": {
@@ -24,7 +24,7 @@
     },
     "homepage": "https://github.com/wuxiaolinchn/vue-visibility-track#readme",
     "dependencies": {
-        "intersection-observer": "^0.7.0"
+        "intersection-observer": "^0.12.0"
     },
     "devDependencies": {
         "@babel/core": "^7.9.0",
